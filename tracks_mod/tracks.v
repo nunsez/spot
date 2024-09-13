@@ -7,6 +7,7 @@ pub:
 	id                 string
 	name               string
 	track_number       int
+	total_tracks       int
 	spotify_url        string
 	artists            string
 	added_at           string
@@ -21,6 +22,7 @@ pub fn Track.from_item(item items_mod.Item) Track {
 		id:                 item.track.id
 		name:               item.track.name
 		track_number:       item.track.track_number
+		total_tracks:       item.track.album.total_tracks
 		spotify_url:        item.track.external_urls.spotify
 		artists:            item.track.artists.map(it.name).join('; ')
 		added_at:           item.added_at

@@ -65,8 +65,12 @@ fn save_metadata(track tracks_mod.Track) !string {
 		rows << build_tag_row('TRACKNUMBER', track.track_number.str())
 	}
 
+	if track.total_tracks != 0 {
+		rows << build_tag_row('TOTALTRACKS', track.total_tracks.str())
+	}
+
 	metadata_path := os.join_path('metadata', track.id)
-	os.write_file(metadata_path, rows.join('\n'))!
+	os.write_file(metadata_path, rows.join('\n') + '\n')!
 	return metadata_path
 }
 
@@ -99,6 +103,7 @@ fn set_metadata(track tracks_mod.Track, metadata_path string, image_path string)
 
 	parts << escaped(track_path)
 	cmd := parts.join(' ')
+	dump(cmd)
 
 	os.execute_opt(cmd) or { return error(msg(track, err.msg())) }
 	return track_path

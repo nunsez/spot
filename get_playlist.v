@@ -80,7 +80,7 @@ fn get_playlist_tracks(config Config, tries int) ![]items_mod.Item {
 
 	params := {
 		'limit':  '50'
-		'fields': 'items(added_at,track(id,name,track_number,external_urls(spotify),album(name,release_date,images(url)),artists(name)))'
+		'fields': 'items(added_at,track(id,name,track_number,external_urls(spotify),album(total_tracks,name,release_date,images(url)),artists(name)))'
 	}
 
 	token := get_access_token(config, 3)!

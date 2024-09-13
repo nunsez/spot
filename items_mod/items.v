@@ -28,6 +28,7 @@ pub:
 
 struct Album {
 pub:
+	total_tracks int
 	name         string
 	release_date string
 	images       []Image
