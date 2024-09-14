@@ -103,7 +103,6 @@ fn set_metadata(track tracks_mod.Track, metadata_path string, image_path string)
 
 	parts << escaped(track_path)
 	cmd := parts.join(' ')
-	dump(cmd)
 
 	os.execute_opt(cmd) or { return error(msg(track, err.msg())) }
 	return track_path
