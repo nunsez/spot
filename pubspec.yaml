@@ -1,0 +1,17 @@
+name: spot
+description: A sample command-line application with basic argument parsing.
+version: 0.0.1
+repository: https://github.com/nunsez/spot.git
+
+environment:
+  sdk: ^3.5.3
+
+# Add regular dependencies here.
+dependencies:
+  args: ^2.4.2
+  http: ^1.2.2
+  json: ^0.20.2
+
+dev_dependencies:
+  lints: ^4.0.0
+  test: ^1.24.0
