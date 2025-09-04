@@ -1,3 +1,5 @@
+/target/
+/.env
 /.access_token
 /tracks.json
 /images/
