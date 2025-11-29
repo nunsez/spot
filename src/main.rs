@@ -2,11 +2,9 @@ mod get_playlist;
 mod item;
 mod set_metadata;
 mod track;
-mod utils;
 
+use anyhow::Result;
 use std::env;
-
-use utils::Result;
 
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();

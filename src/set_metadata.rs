@@ -1,11 +1,11 @@
+use crate::track::Track;
+use anyhow::{Context, Result, bail};
 use metaflac::{Tag, block::PictureType};
 use reqwest::blocking;
 use std::{
     fs,
     path::{Path, PathBuf},
 };
-
-use crate::{track::Track, utils::Result};
 
 pub fn call() -> Result<()> {
     let content = fs::read_to_string("tracks.json")?;
@@ -26,7 +26,7 @@ fn process(track: &Track) -> Result<()> {
     let image_path = download_image(track).unwrap_or_default();
     let track_path = set_metadata(track, &image_path)?;
 
-    fs::rename(&track_path, track_name(track)).map_err(|_| "track rename error")?;
+    fs::rename(&track_path, track_name(track)).context("track rename error")?;
     println!("{}", msg(track, "OK!"));
 
     Ok(())
@@ -52,10 +52,10 @@ fn set_metadata(track: &Track, image_path: &Path) -> Result<PathBuf> {
     let track_path = Path::new(&p);
 
     if !track_path.exists() {
-        return Err(msg(track, "track not found").into());
+        bail!(msg(track, "track not found"));
     }
 
-    let mut tag = Tag::read_from_path(track_path).map_err(|_| msg(track, "tag reading error"))?;
+    let mut tag = Tag::read_from_path(track_path).context(msg(track, "tag reading error"))?;
 
     // clear vorbis
     tag.remove_blocks(metaflac::BlockType::VorbisComment);
@@ -96,7 +96,7 @@ fn set_metadata(track: &Track, image_path: &Path) -> Result<PathBuf> {
         }
     }
 
-    tag.save().map_err(|_| msg(track, "tag saving error"))?;
+    tag.save().context(msg(track, "tag saving error"))?;
 
     Ok(track_path.to_path_buf())
 }

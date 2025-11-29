@@ -1,4 +1,5 @@
-use crate::{item::Item, track::Track, utils::Result};
+use crate::{item::Item, track::Track};
+use anyhow::{Context, Result, bail};
 use reqwest::blocking;
 use serde::Deserialize;
 use serde_json::json;
@@ -34,7 +35,7 @@ struct ResponseData {
 
 fn get_playlist_tracks(config: &Config, tries: u32) -> Result<Vec<Item>> {
     if tries == 0 {
-        return Err("get_playlist_tracks out of tries!".into());
+        bail!("get_playlist_tracks out of tries!");
     }
 
     let params = json!({
@@ -58,8 +59,7 @@ fn get_playlist_tracks(config: &Config, tries: u32) -> Result<Vec<Item>> {
     }
 
     if res.status() != 200 {
-        let text = res.text()?;
-        return Err(text.into());
+        bail!(res.text()?);
     }
 
     let data: ResponseData = res.json()?;
@@ -96,7 +96,8 @@ fn fetch_access_token(config: &Config) -> Result<String> {
 }
 
 fn clear_access_token() -> Result<()> {
-    fs::write(ACCESS_TOKEN_PATH, "").map_err(Into::into)
+    fs::write(ACCESS_TOKEN_PATH, "")?;
+    Ok(())
 }
 
 #[allow(dead_code)]
@@ -126,7 +127,7 @@ impl Config {
 }
 
 fn get_var(name: &str) -> Result<String> {
-    env::var(name).map_err(|_| format!("{name} required").into())
+    env::var(name).context(format!("{name} required"))
 }
 
 fn get_var_with_default(name: &str, default: &str) -> String {
