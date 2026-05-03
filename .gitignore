@@ -2,4 +2,5 @@
 /.env
 /.access_token
 /tracks.json
+/items.json
 /images/

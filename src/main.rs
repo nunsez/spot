@@ -1,4 +1,5 @@
 mod get_playlist;
+mod get_tracks;
 mod item;
 mod set_metadata;
 mod track;
@@ -12,6 +13,7 @@ fn main() -> Result<()> {
         match cmd.as_str() {
             "get_playlist" => get_playlist::call()?,
             "set_metadata" => set_metadata::call()?,
+            "get_tracks" => get_tracks::call()?,
             _ => usage(),
         }
     } else {
@@ -22,5 +24,5 @@ fn main() -> Result<()> {
 }
 
 fn usage() {
-    println!("get_playlist | set_metadata");
+    println!("get_playlist | set_metadata | get_tracks");
 }
