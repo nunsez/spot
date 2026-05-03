@@ -25,8 +25,12 @@ pub fn call() -> Result<()> {
 fn process(track: &Track) -> Result<()> {
     let image_path = download_image(track).unwrap_or_default();
     let track_path = set_metadata(track, &image_path)?;
+    let track_name = build_track_name(track);
 
-    fs::rename(&track_path, track_name(track)).context("track rename error")?;
+    fs::rename(&track_path, &track_name).with_context(|| {
+        let message = format!("track rename error: {}", &track_name);
+        msg(track, &message)
+    })?;
     println!("{}", msg(track, "OK!"));
 
     Ok(())
@@ -105,7 +109,8 @@ fn set_vorbis_first(tag: &mut Tag, key: &str, value: &str) {
     tag.set_vorbis(key, vec![value]);
 }
 
-fn track_name(track: &Track) -> String {
+// TODO: should sanitize symbols: \/:*?"<>| ?
+fn build_track_name(track: &Track) -> String {
     let artists = track.artists.replace(";", ",");
     format!("{} - {}.flac", artists, track.name)
 }
